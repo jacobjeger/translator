@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:padding="@dimen/spacing_md"
+    android:descendantFocusability="blocksDescendants">
+
+    <!-- Language Pair Selector -->
+    <TextView
+        android:id="@+id/tvLanguagePair"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MegaLife.LanguageSelector"
+        android:text="English → Hebrew"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_sm" />
+
+    <!-- Source Text Input -->
+    <EditText
+        android:id="@+id/etSourceText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        style="@style/Widget.MegaLife.InputField"
+        android:hint="@string/hint_source_text"
+        android:inputType="textMultiLine"
+        android:maxLines="6"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:importantForAutofill="no" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_sm" />
+
+    <!-- Translation Output -->
+    <TextView
+        android:id="@+id/tvTranslationOutput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        style="@style/Widget.MegaLife.InputField"
+        android:hint="@string/hint_translation_output"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:textIsSelectable="false" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_sm" />
+
+    <!-- Translating indicator -->
+    <TextView
+        android:id="@+id/tvTranslating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/translating"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_size_small"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <!-- Action Buttons Row -->
+    <LinearLayout
+        android:id="@+id/actionButtonsRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnCamera"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/spacing_xs"
+            style="@style/Widget.MegaLife.Button"
+            android:text="@string/btn_camera"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <Button
+            android:id="@+id/btnGallery"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_xs"
+            android:layout_marginEnd="@dimen/spacing_xs"
+            style="@style/Widget.MegaLife.Button"
+            android:text="@string/btn_gallery"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_xs"
+            style="@style/Widget.MegaLife.Button"
+            android:text="@string/btn_history"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+    </LinearLayout>
+
+</LinearLayout>

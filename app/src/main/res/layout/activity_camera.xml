@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:descendantFocusability="blocksDescendants">
+
+    <!-- CameraX Preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Guide Frame Overlay -->
+    <View
+        android:id="@+id/guideFrame"
+        android:layout_width="280dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:background="@drawable/camera_guide_frame" />
+
+    <!-- Flash Toggle Button -->
+    <TextView
+        android:id="@+id/tvFlashToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/spacing_md"
+        android:text="@string/camera_flash_off"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_size_small"
+        android:background="@drawable/bg_focusable"
+        android:padding="@dimen/spacing_sm" />
+
+    <!-- Instruction Label -->
+    <TextView
+        android:id="@+id/tvInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/spacing_xl"
+        android:text="@string/camera_instruction"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_size_medium"
+        android:background="@color/overlay_bg"
+        android:padding="@dimen/spacing_sm" />
+
+</FrameLayout>
