@@ -2,69 +2,60 @@ package com.megalife.translator.util
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
 object PermissionHelper {
 
-    fun hasCameraPermission(activity: AppCompatActivity): Boolean {
-        return ContextCompat.checkSelfPermission(
-            activity, Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-    }
+    fun hasCameraPermission(context: Context): Boolean =
+        ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED
 
-    fun hasStorageReadPermission(activity: AppCompatActivity): Boolean {
+    fun hasStorageReadPermission(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ContextCompat.checkSelfPermission(
-                activity, Manifest.permission.READ_MEDIA_IMAGES
-            ) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) ==
+                    PackageManager.PERMISSION_GRANTED
         } else {
-            ContextCompat.checkSelfPermission(
-                activity, Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED
         }
     }
 
-    fun hasStorageWritePermission(activity: AppCompatActivity): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            true // Scoped storage, no permission needed for MediaStore
-        } else {
-            ContextCompat.checkSelfPermission(
-                activity, Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    fun requestWithRationale(
-        activity: AppCompatActivity,
-        rationale: String,
+    fun requestCameraWithRationale(
+        context: Context,
         launcher: ActivityResultLauncher<String>,
-        permission: String
+        rationale: String
     ) {
-        if (activity.shouldShowRequestPermissionRationale(permission)) {
-            AlertDialog.Builder(activity)
-                .setTitle("Permission Required")
-                .setMessage(rationale)
-                .setPositiveButton("Grant") { _, _ ->
-                    launcher.launch(permission)
-                }
-                .setNegativeButton("Deny") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-        } else {
-            launcher.launch(permission)
-        }
+        AlertDialog.Builder(context)
+            .setTitle("Permission Needed")
+            .setMessage(rationale)
+            .setPositiveButton("OK") { _, _ ->
+                launcher.launch(Manifest.permission.CAMERA)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
-    fun getStorageReadPermission(): String {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    fun requestStorageWithRationale(
+        context: Context,
+        launcher: ActivityResultLauncher<String>,
+        rationale: String
+    ) {
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
         } else {
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
+        AlertDialog.Builder(context)
+            .setTitle("Permission Needed")
+            .setMessage(rationale)
+            .setPositiveButton("OK") { _, _ ->
+                launcher.launch(permission)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

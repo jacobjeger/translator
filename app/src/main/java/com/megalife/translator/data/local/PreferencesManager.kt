@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 class PreferencesManager(context: Context) {
 
     private val prefs: SharedPreferences =
-        context.getSharedPreferences("megalife_translator_prefs", Context.MODE_PRIVATE)
+        context.getSharedPreferences("translator_prefs", Context.MODE_PRIVATE)
 
     var defaultLanguagePairIndex: Int
         get() = prefs.getInt(KEY_DEFAULT_LANG_PAIR, 0)
@@ -21,11 +21,11 @@ class PreferencesManager(context: Context) {
         set(value) = prefs.edit().putBoolean(KEY_TTS_ENABLED, value).apply()
 
     var ttsSpeed: Int
-        get() = prefs.getInt(KEY_TTS_SPEED, TTS_SPEED_NORMAL)
+        get() = prefs.getInt(KEY_TTS_SPEED, 1) // 0=slow, 1=normal, 2=fast
         set(value) = prefs.edit().putInt(KEY_TTS_SPEED, value).apply()
 
-    var fontSizeOption: Int
-        get() = prefs.getInt(KEY_FONT_SIZE, FONT_SIZE_MEDIUM)
+    var fontSizeLevel: Int
+        get() = prefs.getInt(KEY_FONT_SIZE, 1) // 0=small, 1=medium, 2=large
         set(value) = prefs.edit().putInt(KEY_FONT_SIZE, value).apply()
 
     var historyEnabled: Boolean
@@ -33,16 +33,16 @@ class PreferencesManager(context: Context) {
         set(value) = prefs.edit().putBoolean(KEY_HISTORY_ENABLED, value).apply()
 
     val fontSizeSp: Float
-        get() = when (fontSizeOption) {
-            FONT_SIZE_SMALL -> 14f
-            FONT_SIZE_LARGE -> 20f
-            else -> 16f
+        get() = when (fontSizeLevel) {
+            0 -> 14f
+            2 -> 22f
+            else -> 18f
         }
 
     val ttsSpeedFloat: Float
         get() = when (ttsSpeed) {
-            TTS_SPEED_SLOW -> 0.7f
-            TTS_SPEED_FAST -> 1.5f
+            0 -> 0.7f
+            2 -> 1.5f
             else -> 1.0f
         }
 
@@ -53,13 +53,5 @@ class PreferencesManager(context: Context) {
         private const val KEY_TTS_SPEED = "tts_speed"
         private const val KEY_FONT_SIZE = "font_size"
         private const val KEY_HISTORY_ENABLED = "history_enabled"
-
-        const val TTS_SPEED_SLOW = 0
-        const val TTS_SPEED_NORMAL = 1
-        const val TTS_SPEED_FAST = 2
-
-        const val FONT_SIZE_SMALL = 0
-        const val FONT_SIZE_MEDIUM = 1
-        const val FONT_SIZE_LARGE = 2
     }
 }

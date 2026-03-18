@@ -3,26 +3,23 @@ package com.megalife.translator.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.megalife.translator.R
 import com.megalife.translator.data.model.TranslationHistory
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
-class HistoryAdapter : ListAdapter<TranslationHistory, HistoryAdapter.ViewHolder>(DiffCallback) {
+class HistoryAdapter(
+    private val onItemClick: (TranslationHistory) -> Unit,
+    private val onItemLongClick: (TranslationHistory) -> Unit
+) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
-    private var selectedIndex = -1
+    private var items = listOf<TranslationHistory>()
 
-    fun setSelectedIndex(index: Int) {
-        val oldIndex = selectedIndex
-        selectedIndex = index
-        if (oldIndex >= 0) notifyItemChanged(oldIndex)
-        if (index >= 0) notifyItemChanged(index)
+    fun submitList(newItems: List<TranslationHistory>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,34 +29,33 @@ class HistoryAdapter : ListAdapter<TranslationHistory, HistoryAdapter.ViewHolder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item, position == selectedIndex)
+        holder.bind(items[position])
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val itemRoot: LinearLayout = itemView.findViewById(R.id.itemRoot)
+    override fun getItemCount() = items.size
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvLanguagePair: TextView = itemView.findViewById(R.id.tvLanguagePair)
         private val tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
         private val tvSourceText: TextView = itemView.findViewById(R.id.tvSourceText)
         private val tvTranslatedText: TextView = itemView.findViewById(R.id.tvTranslatedText)
 
-        private val dateFormat = SimpleDateFormat("MMM d, HH:mm", Locale.getDefault())
-
-        fun bind(item: TranslationHistory, isSelected: Boolean) {
+        fun bind(item: TranslationHistory) {
             tvLanguagePair.text = item.languagePairDisplay
-            tvTimestamp.text = dateFormat.format(Date(item.timestamp))
+            tvTimestamp.text = formatTimestamp(item.timestamp)
             tvSourceText.text = item.sourceText
             tvTranslatedText.text = item.translatedText
 
-            itemRoot.isSelected = isSelected
-            if (isSelected) {
-                itemRoot.requestFocus()
+            itemView.setOnClickListener { onItemClick(item) }
+            itemView.setOnLongClickListener {
+                onItemLongClick(item)
+                true
             }
         }
-    }
 
-    object DiffCallback : DiffUtil.ItemCallback<TranslationHistory>() {
-        override fun areItemsTheSame(a: TranslationHistory, b: TranslationHistory) = a.id == b.id
-        override fun areContentsTheSame(a: TranslationHistory, b: TranslationHistory) = a == b
+        private fun formatTimestamp(timestamp: Long): String {
+            val sdf = SimpleDateFormat("MMM d, HH:mm", Locale.getDefault())
+            return sdf.format(Date(timestamp))
+        }
     }
 }

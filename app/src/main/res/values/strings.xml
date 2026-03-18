@@ -1,81 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MegaLife Translator</string>
-
-    <!-- Main Screen -->
+    <string name="app_name">Translator</string>
     <string name="hint_source_text">Type text to translate…</string>
     <string name="hint_translation_output">Translation will appear here</string>
     <string name="btn_camera">Camera</string>
     <string name="btn_gallery">Gallery</string>
     <string name="btn_history">History</string>
-    <string name="copied_to_clipboard">Copied</string>
-    <string name="languages_swapped">Languages swapped</string>
-    <string name="input_cleared">Cleared</string>
-    <string name="translating">Translating…</string>
-
-    <!-- Language names -->
-    <string name="lang_english">English</string>
-    <string name="lang_hebrew">Hebrew</string>
-    <string name="lang_yiddish">Yiddish</string>
-    <string name="lang_spanish">Spanish</string>
-    <string name="lang_russian">Russian</string>
-
-    <!-- Camera Screen -->
-    <string name="camera_instruction">Point at text and press center</string>
-    <string name="camera_flash_on">Flash on</string>
-    <string name="camera_flash_off">Flash off</string>
-    <string name="camera_permission_rationale">Camera access is needed to photograph text for translation. No photos are stored or shared.</string>
-
-    <!-- Image Translation Screen -->
-    <string name="processing_image">Processing image…</string>
-    <string name="running_ocr">Detecting text…</string>
-    <string name="translating_text">Translating text…</string>
-    <string name="rendering_overlay">Rendering translation…</string>
-    <string name="no_text_found">No text found — try again</string>
-    <string name="translation_failed">Translation failed — showing original text</string>
-    <string name="image_saved">Image saved to gallery</string>
-    <string name="image_save_failed">Failed to save image</string>
-    <string name="btn_copy_all">Copy All Text</string>
+    <string name="btn_settings">Settings</string>
+    <string name="btn_copy_all">Copy All</string>
     <string name="btn_save_image">Save Image</string>
     <string name="btn_back">Back</string>
-    <string name="storage_permission_rationale">Storage access is needed to save the translated image to your gallery.</string>
-    <string name="gallery_permission_rationale">Photo access is needed to select an image for text translation.</string>
-
-    <!-- History Screen -->
-    <string name="history_title">Translation History</string>
-    <string name="history_empty">No translation history</string>
-    <string name="delete_confirmation_title">Delete Translation</string>
-    <string name="delete_confirmation_message">Delete this translation from history?</string>
+    <string name="btn_clear_history">Clear All History</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_delete">Delete</string>
-    <string name="history_cleared">History cleared</string>
+    <string name="btn_ok">OK</string>
 
-    <!-- Settings Screen -->
-    <string name="settings_title">Settings</string>
-    <string name="setting_default_language_pair">Default language pair</string>
-    <string name="setting_instant_translate">Instant translate</string>
-    <string name="setting_instant_translate_desc">Translate as you type</string>
-    <string name="setting_tts">Text-to-Speech</string>
-    <string name="setting_tts_desc">Read translations aloud</string>
-    <string name="setting_tts_speed">TTS speed</string>
-    <string name="setting_tts_slow">Slow</string>
-    <string name="setting_tts_normal">Normal</string>
-    <string name="setting_tts_fast">Fast</string>
-    <string name="setting_font_size">Font size</string>
-    <string name="setting_font_small">Small</string>
-    <string name="setting_font_medium">Medium</string>
-    <string name="setting_font_large">Large</string>
-    <string name="setting_history_enabled">Save history</string>
-    <string name="setting_history_desc">Save text translations to history</string>
-    <string name="setting_clear_history">Clear all history</string>
-    <string name="setting_clear_history_confirm">Delete all translation history?</string>
-    <string name="setting_app_version">App version</string>
+    <string name="camera_instruction">Point at text and press center</string>
+    <string name="camera_flash_on">Flash On</string>
+    <string name="camera_flash_off">Flash Off</string>
 
-    <!-- Content Filter -->
+    <string name="copied_to_clipboard">Copied</string>
+    <string name="image_saved">Image saved to gallery</string>
+    <string name="no_text_found">No text found — try again</string>
+    <string name="translation_error">Translation failed — showing original text</string>
     <string name="content_blocked">This content cannot be translated</string>
+    <string name="empty_history">No translation history</string>
+    <string name="translating">Translating…</string>
+    <string name="processing_image">Processing image…</string>
 
-    <!-- Permissions -->
-    <string name="permission_required">Permission Required</string>
-    <string name="btn_grant">Grant</string>
-    <string name="btn_deny">Deny</string>
+    <string name="delete_confirm_title">Delete Translation</string>
+    <string name="delete_confirm_message">Delete this translation from history?</string>
+    <string name="clear_history_confirm_title">Clear History</string>
+    <string name="clear_history_confirm_message">Delete all translation history?</string>
+
+    <string name="permission_camera_rationale">Camera permission is needed to photograph text for translation.</string>
+    <string name="permission_storage_rationale">Storage permission is needed to access photos for translation.</string>
+    <string name="permission_write_rationale">Storage permission is needed to save the translated image.</string>
+    <string name="permission_denied">Permission denied. Please grant permission in Settings.</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_default_language">Default Language Pair</string>
+    <string name="settings_instant_translate">Instant Translation</string>
+    <string name="settings_tts_enabled">Text-to-Speech</string>
+    <string name="settings_tts_speed">TTS Speed</string>
+    <string name="settings_font_size">Font Size</string>
+    <string name="settings_history_enabled">Save History</string>
+    <string name="settings_clear_history">Clear All History</string>
+    <string name="settings_app_version">App Version</string>
+
+    <string name="tts_speed_slow">Slow</string>
+    <string name="tts_speed_normal">Normal</string>
+    <string name="tts_speed_fast">Fast</string>
+    <string name="font_size_small">Small</string>
+    <string name="font_size_medium">Medium</string>
+    <string name="font_size_large">Large</string>
 </resources>

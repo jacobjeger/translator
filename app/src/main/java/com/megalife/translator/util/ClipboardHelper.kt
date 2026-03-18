@@ -8,14 +8,14 @@ object ClipboardHelper {
 
     fun getText(context: Context): String? {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        if (!clipboard.hasPrimaryClip()) return null
-        val item = clipboard.primaryClip?.getItemAt(0) ?: return null
-        return item.text?.toString()
+        val clip = clipboard.primaryClip ?: return null
+        if (clip.itemCount == 0) return null
+        return clip.getItemAt(0).text?.toString()
     }
 
     fun setText(context: Context, text: String) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Translation", text)
+        val clip = ClipData.newPlainText("translation", text)
         clipboard.setPrimaryClip(clip)
     }
 }

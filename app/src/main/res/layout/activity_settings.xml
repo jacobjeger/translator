@@ -1,307 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:descendantFocusability="blocksDescendants">
+    android:background="@color/colorBackground">
 
     <LinearLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/spacing_md">
+        android:descendantFocusability="blocksDescendants"
+        android:padding="@dimen/padding_medium">
 
-        <!-- Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_title"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_size_title"
-            android:gravity="center"
-            android:paddingBottom="@dimen/spacing_md" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
+            android:textColor="@color/colorOnSurface"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/padding_medium" />
 
         <!-- Default Language Pair -->
         <LinearLayout
-            android:id="@+id/settingDefaultLang"
+            android:id="@+id/settingLanguagePair"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@drawable/bg_focusable"
-            android:padding="@dimen/spacing_md"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginBottom="4dp"
+            android:focusable="true">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/setting_default_language_pair"
-                android:textColor="@color/text_primary"
+                android:layout_weight="1"
+                android:text="@string/settings_default_language"
+                android:textColor="@color/colorOnSurface"
                 android:textSize="@dimen/text_size_medium" />
-
             <TextView
-                android:id="@+id/tvDefaultLangValue"
+                android:id="@+id/tvSettingLanguage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size_small" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
 
         <!-- Instant Translate -->
         <LinearLayout
             android:id="@+id/settingInstantTranslate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_focusable"
-            android:padding="@dimen/spacing_md"
-            android:gravity="center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
-            <LinearLayout
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginBottom="4dp"
+            android:focusable="true">
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_instant_translate"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_instant_translate_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_small" />
-            </LinearLayout>
-
+                android:text="@string/settings_instant_translate"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="@dimen/text_size_medium" />
             <TextView
-                android:id="@+id/tvInstantTranslateValue"
+                android:id="@+id/tvSettingInstant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_light"
-                android:textSize="@dimen/text_size_medium" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
-
-        <!-- TTS -->
+        <!-- TTS Enabled -->
         <LinearLayout
             android:id="@+id/settingTts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_focusable"
-            android:padding="@dimen/spacing_md"
-            android:gravity="center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
-            <LinearLayout
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginBottom="4dp"
+            android:focusable="true">
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_tts"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_tts_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_small" />
-            </LinearLayout>
-
+                android:text="@string/settings_tts_enabled"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="@dimen/text_size_medium" />
             <TextView
-                android:id="@+id/tvTtsValue"
+                android:id="@+id/tvSettingTts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_light"
-                android:textSize="@dimen/text_size_medium" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
 
         <!-- TTS Speed -->
         <LinearLayout
             android:id="@+id/settingTtsSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_focusable"
-            android:padding="@dimen/spacing_md"
-            android:gravity="center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginBottom="4dp"
+            android:focusable="true">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/setting_tts_speed"
-                android:textColor="@color/text_primary"
+                android:text="@string/settings_tts_speed"
+                android:textColor="@color/colorOnSurface"
                 android:textSize="@dimen/text_size_medium" />
-
             <TextView
-                android:id="@+id/tvTtsSpeedValue"
+                android:id="@+id/tvSettingTtsSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_light"
-                android:textSize="@dimen/text_size_medium" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
 
         <!-- Font Size -->
         <LinearLayout
             android:id="@+id/settingFontSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_focusable"
-            android:padding="@dimen/spacing_md"
-            android:gravity="center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginBottom="4dp"
+            android:focusable="true">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/setting_font_size"
-                android:textColor="@color/text_primary"
+                android:text="@string/settings_font_size"
+                android:textColor="@color/colorOnSurface"
                 android:textSize="@dimen/text_size_medium" />
-
             <TextView
-                android:id="@+id/tvFontSizeValue"
+                android:id="@+id/tvSettingFontSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_light"
-                android:textSize="@dimen/text_size_medium" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
 
         <!-- History Enabled -->
         <LinearLayout
             android:id="@+id/settingHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_focusable"
-            android:padding="@dimen/spacing_md"
-            android:gravity="center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
-            <LinearLayout
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium"
+            android:layout_marginBottom="4dp"
+            android:focusable="true">
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_history_enabled"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_history_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_small" />
-            </LinearLayout>
-
+                android:text="@string/settings_history_enabled"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="@dimen/text_size_medium" />
             <TextView
-                android:id="@+id/tvHistoryValue"
+                android:id="@+id/tvSettingHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_light"
-                android:textSize="@dimen/text_size_medium" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
 
         <!-- Clear History -->
         <TextView
             android:id="@+id/settingClearHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/setting_clear_history"
-            android:textColor="@color/error"
-            android:textSize="@dimen/text_size_medium"
             android:background="@drawable/bg_focusable"
-            android:padding="@dimen/spacing_md"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
+            android:padding="@dimen/padding_medium"
+            android:text="@string/settings_clear_history"
+            android:textColor="@color/colorError"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_marginBottom="4dp"
+            android:focusable="true" />
 
         <!-- App Version -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/spacing_md">
-
+            android:padding="@dimen/padding_medium">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/setting_app_version"
-                android:textColor="@color/text_secondary"
-                android:textSize="@dimen/text_size_small" />
-
+                android:text="@string/settings_app_version"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="@dimen/text_size_medium" />
             <TextView
                 android:id="@+id/tvAppVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
+                android:textColor="#80E0E0E0"
                 android:textSize="@dimen/text_size_small" />
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

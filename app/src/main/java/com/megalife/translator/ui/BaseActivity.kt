@@ -15,17 +15,14 @@ abstract class BaseActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        // Haptic feedback on every keypress throughout the entire app
-        currentFocus?.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            ?: window.decorView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-
-        // Let subclass handle the key
+        // Haptic feedback on every keypress
+        val rootView = window.decorView.rootView
+        rootView.performHapticFeedback(
+            HapticFeedbackConstants.KEYBOARD_TAP,
+            HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+        )
+        
         if (handleDpadEvent(keyCode, event)) {
             return true
         }
@@ -44,16 +41,21 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun handleLongPress(keyCode: Int, event: KeyEvent?): Boolean = false
 
-    protected fun startActivityWithFade(intent: Intent) {
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+    }
+
+    fun startActivityWithFade(intent: Intent) {
         startActivity(intent)
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
-    protected fun updateFocusVisual(views: List<View>, focusedIndex: Int) {
-        for ((index, view) in views.withIndex()) {
-            view.isSelected = index == focusedIndex
+    protected fun updateFocusVisual(views: List<View>, focusIndex: Int) {
+        for ((i, view) in views.withIndex()) {
+            view.isSelected = i == focusIndex
             view.isFocused
-            if (index == focusedIndex) {
+            if (i == focusIndex) {
                 view.requestFocus()
             }
         }

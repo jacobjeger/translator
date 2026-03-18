@@ -4,119 +4,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="@color/colorBackground">
 
-    <!-- Image Display -->
-    <FrameLayout
+    <!-- Image display -->
+    <ImageView
+        android:id="@+id/ivTranslatedImage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        android:background="@color/black" />
 
-        <ImageView
-            android:id="@+id/ivTranslatedImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:contentDescription="Translated image" />
-
-        <!-- Loading Overlay -->
-        <LinearLayout
-            android:id="@+id/loadingOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="@color/overlay_bg"
-            android:visibility="visible">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:indeterminateTint="@color/primary" />
-
-            <TextView
-                android:id="@+id/tvLoadingStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:text="@string/processing_image"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_medium" />
-        </LinearLayout>
-
-        <!-- No Text Found Message -->
-        <TextView
-            android:id="@+id/tvNoText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/no_text_found"
-            android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_size_large"
-            android:visibility="gone" />
-    </FrameLayout>
-
-    <!-- Extracted Text (shown on translation failure) -->
-    <ScrollView
-        android:id="@+id/scrollExtractedText"
+    <!-- Loading indicator -->
+    <LinearLayout
+        android:id="@+id/loadingContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="120dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_small"
         android:visibility="gone">
 
+        <ProgressBar
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp" />
+
         <TextView
-            android:id="@+id/tvExtractedText"
-            android:layout_width="match_parent"
+            android:id="@+id/tvLoadingStatus"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_md"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_size_medium" />
-    </ScrollView>
+            android:text="@string/processing_image"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="@dimen/text_size_small" />
+    </LinearLayout>
+
+    <!-- Error/status text -->
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/padding_small"
+        android:textColor="@color/colorError"
+        android:textSize="@dimen/text_size_small"
+        android:visibility="gone" />
 
     <!-- Action Buttons -->
     <LinearLayout
-        android:id="@+id/actionButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/spacing_sm"
-        android:gravity="center">
+        android:gravity="center"
+        android:padding="@dimen/padding_small">
 
-        <Button
+        <TextView
             android:id="@+id/btnCopyAll"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="@dimen/spacing_xs"
-            style="@style/Widget.MegaLife.Button"
+            android:background="@drawable/bg_focusable"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
             android:text="@string/btn_copy_all"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginEnd="4dp"
+            android:focusable="true" />
 
-        <Button
+        <TextView
             android:id="@+id/btnSaveImage"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/spacing_xs"
-            android:layout_marginEnd="@dimen/spacing_xs"
-            style="@style/Widget.MegaLife.Button"
+            android:background="@drawable/bg_focusable"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
             android:text="@string/btn_save_image"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:focusable="true" />
 
-        <Button
+        <TextView
             android:id="@+id/btnBack"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/spacing_xs"
-            style="@style/Widget.MegaLife.Button"
+            android:background="@drawable/bg_focusable"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
             android:text="@string/btn_back"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginStart="4dp"
+            android:focusable="true" />
     </LinearLayout>
-
 </LinearLayout>

@@ -4,33 +4,13 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.megalife.translator.data.model.Language
+import androidx.lifecycle.*
 import com.megalife.translator.data.repository.TranslationRepository
-import com.megalife.translator.data.repository.TranslationResult
 import com.megalife.translator.ocr.ImageOverlayRenderer
+import com.megalife.translator.ocr.OcrBlock
 import com.megalife.translator.ocr.OcrProcessor
-import com.megalife.translator.ocr.OcrTextBlock
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-sealed class ImageTranslationState {
-    object Loading : ImageTranslationState()
-    data class OcrRunning(val message: String) : ImageTranslationState()
-    data class Translating(val message: String) : ImageTranslationState()
-    data class Rendering(val message: String) : ImageTranslationState()
-    data class Success(
-        val overlayBitmap: Bitmap,
-        val allTranslatedText: String
-    ) : ImageTranslationState()
-    object NoTextFound : ImageTranslationState()
-    data class TranslationFailed(val extractedText: String, val error: String) : ImageTranslationState()
-    object ContentBlocked : ImageTranslationState()
-}
+import java.io.File
 
 class ImageTranslationViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -38,97 +18,98 @@ class ImageTranslationViewModel(application: Application) : AndroidViewModel(app
     private val ocrProcessor = OcrProcessor()
     private val overlayRenderer = ImageOverlayRenderer()
 
-    private val _state = MutableLiveData<ImageTranslationState>(ImageTranslationState.Loading)
-    val state: LiveData<ImageTranslationState> = _state
+    private val _isProcessing = MutableLiveData(false)
+    val isProcessing: LiveData<Boolean> = _isProcessing
+
+    private val _resultBitmap = MutableLiveData<Bitmap?>()
+    val resultBitmap: LiveData<Bitmap?> = _resultBitmap
+
+    private val _allTranslatedText = MutableLiveData("")
+    val allTranslatedText: LiveData<String> = _allTranslatedText
+
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?> = _errorMessage
+
+    private val _noTextFound = MutableLiveData(false)
+    val noTextFound: LiveData<Boolean> = _noTextFound
 
     private var originalBitmap: Bitmap? = null
-    private var resultBitmap: Bitmap? = null
 
-    fun processImage(uri: Uri, sourceLanguage: Language?, targetLanguage: Language) {
+    fun processImage(imagePath: String?, imageUri: String?, sourceLang: String, targetLang: String) {
         viewModelScope.launch {
-            _state.value = ImageTranslationState.Loading
+            _isProcessing.value = true
+            _errorMessage.value = null
+            _noTextFound.value = false
 
             try {
-                // Load bitmap
-                val bitmap = withContext(Dispatchers.IO) {
-                    val inputStream = getApplication<Application>().contentResolver.openInputStream(uri)
-                    BitmapFactory.decodeStream(inputStream)
-                } ?: run {
-                    _state.value = ImageTranslationState.NoTextFound
+                val bitmap = loadBitmap(imagePath, imageUri)
+                if (bitmap == null) {
+                    _errorMessage.value = "Failed to load image"
+                    _isProcessing.value = false
                     return@launch
                 }
 
                 originalBitmap = bitmap
-                processLoadedBitmap(bitmap, sourceLanguage, targetLanguage)
-            } catch (e: Exception) {
-                _state.value = ImageTranslationState.TranslationFailed("", e.message ?: "Failed to load image")
-            }
-        }
-    }
 
-    fun processImage(bitmap: Bitmap, sourceLanguage: Language?, targetLanguage: Language) {
-        originalBitmap = bitmap
-        viewModelScope.launch {
-            processLoadedBitmap(bitmap, sourceLanguage, targetLanguage)
-        }
-    }
+                // Run OCR
+                val blocks = ocrProcessor.processImage(bitmap)
 
-    private suspend fun processLoadedBitmap(
-        bitmap: Bitmap,
-        sourceLanguage: Language?,
-        targetLanguage: Language
-    ) {
-        // Step 1: OCR
-        _state.value = ImageTranslationState.OcrRunning("Detecting text…")
-        val blocks: List<OcrTextBlock>
-        try {
-            blocks = ocrProcessor.processImage(bitmap)
-        } catch (e: Exception) {
-            _state.value = ImageTranslationState.TranslationFailed("", "OCR failed: ${e.message}")
-            return
-        }
-
-        if (blocks.isEmpty()) {
-            _state.value = ImageTranslationState.NoTextFound
-            return
-        }
-
-        val extractedTexts = blocks.map { it.text }
-        val allExtractedText = extractedTexts.joinToString("\n")
-
-        // Step 2: Translate batch
-        _state.value = ImageTranslationState.Translating("Translating text…")
-        val result = translationRepo.translateBatch(
-            texts = extractedTexts,
-            fromLanguage = sourceLanguage?.code,
-            toLanguage = targetLanguage.code
-        )
-
-        when (result) {
-            is TranslationResult.BatchSuccess -> {
-                // Step 3: Render overlay
-                _state.value = ImageTranslationState.Rendering("Rendering translation…")
-                val overlayBitmap = withContext(Dispatchers.Default) {
-                    overlayRenderer.renderOverlay(bitmap, blocks, result.translations, targetLanguage)
+                if (blocks.isEmpty()) {
+                    _noTextFound.value = true
+                    _resultBitmap.value = bitmap
+                    _isProcessing.value = false
+                    return@launch
                 }
-                resultBitmap = overlayBitmap
-                val allTranslated = result.translations.joinToString("\n")
-                _state.value = ImageTranslationState.Success(overlayBitmap, allTranslated)
+
+                // Translate all blocks in one batch
+                val texts = blocks.map { it.text }
+                val result = translationRepo.translateBatch(texts, sourceLang, targetLang)
+
+                when (result) {
+                    is TranslationRepository.TranslationResult.BatchSuccess -> {
+                        // Render overlay
+                        val overlayBitmap = overlayRenderer.renderOverlay(
+                            bitmap, blocks, result.translations, targetLang
+                        )
+                        _resultBitmap.value = overlayBitmap
+                        _allTranslatedText.value = result.translations.joinToString("\n")
+                    }
+                    is TranslationRepository.TranslationResult.ContentBlocked -> {
+                        _resultBitmap.value = bitmap
+                        _allTranslatedText.value = texts.joinToString("\n")
+                        _errorMessage.value = "This content cannot be translated"
+                    }
+                    is TranslationRepository.TranslationResult.Error -> {
+                        // Show original text with error
+                        _resultBitmap.value = bitmap
+                        _allTranslatedText.value = texts.joinToString("\n")
+                        _errorMessage.value = "Translation failed — showing original text"
+                    }
+                    else -> {}
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Error: ${e.message}"
             }
-            is TranslationResult.ContentBlocked -> {
-                _state.value = ImageTranslationState.ContentBlocked
-            }
-            is TranslationResult.Error -> {
-                _state.value = ImageTranslationState.TranslationFailed(allExtractedText, result.message)
-            }
-            is TranslationResult.Success -> {
-                // Shouldn't happen with batch, but handle gracefully
-                _state.value = ImageTranslationState.TranslationFailed(allExtractedText, "Unexpected response format")
-            }
+
+            _isProcessing.value = false
         }
     }
 
-    fun getResultBitmap(): Bitmap? = resultBitmap
+    private fun loadBitmap(imagePath: String?, imageUri: String?): Bitmap? {
+        return try {
+            if (imagePath != null) {
+                BitmapFactory.decodeFile(imagePath)
+            } else if (imageUri != null) {
+                val uri = Uri.parse(imageUri)
+                val inputStream = getApplication<Application>().contentResolver.openInputStream(uri)
+                BitmapFactory.decodeStream(inputStream).also { inputStream?.close() }
+            } else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun getResultBitmap(): Bitmap? = _resultBitmap.value
 
     override fun onCleared() {
         super.onCleared()

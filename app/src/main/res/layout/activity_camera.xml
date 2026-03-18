@@ -3,47 +3,47 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="@color/black">
 
-    <!-- CameraX Preview -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Guide Frame Overlay -->
+    <!-- Guide Frame -->
     <View
         android:id="@+id/guideFrame"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_gravity="center"
+        android:layout_marginStart="@dimen/camera_guide_margin"
+        android:layout_marginEnd="@dimen/camera_guide_margin"
         android:background="@drawable/camera_guide_frame" />
 
-    <!-- Flash Toggle Button -->
+    <!-- Flash indicator -->
     <TextView
-        android:id="@+id/tvFlashToggle"
+        android:id="@+id/tvFlashStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        android:layout_margin="@dimen/spacing_md"
+        android:layout_margin="@dimen/padding_medium"
+        android:background="#80000000"
+        android:padding="@dimen/padding_small"
         android:text="@string/camera_flash_off"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_size_small"
-        android:background="@drawable/bg_focusable"
-        android:padding="@dimen/spacing_sm" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_small" />
 
-    <!-- Instruction Label -->
+    <!-- Instruction -->
     <TextView
         android:id="@+id/tvInstruction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/spacing_xl"
+        android:layout_marginBottom="@dimen/padding_large"
+        android:background="#80000000"
+        android:padding="@dimen/padding_small"
         android:text="@string/camera_instruction"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_size_medium"
-        android:background="@color/overlay_bg"
-        android:padding="@dimen/spacing_sm" />
-
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_small" />
 </FrameLayout>

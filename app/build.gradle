@@ -21,9 +21,8 @@ android {
         versionCode 1
         versionName "1.0.0"
 
-        buildConfigField "String", "AZURE_TRANSLATOR_KEY", "\"${localProperties['AZURE_TRANSLATOR_KEY']}\""
-        buildConfigField "String", "AZURE_TRANSLATOR_REGION", "\"${localProperties['AZURE_TRANSLATOR_REGION']}\""
-        buildConfigField "String", "AZURE_TRANSLATOR_ENDPOINT", "\"${localProperties['AZURE_TRANSLATOR_ENDPOINT']}\""
+        buildConfigField "String", "AZURE_TRANSLATOR_KEY", "\"${localProperties.getProperty('AZURE_TRANSLATOR_KEY', '')}\""
+        buildConfigField "String", "AZURE_TRANSLATOR_REGION", "\"${localProperties.getProperty('AZURE_TRANSLATOR_REGION', '')}\""
     }
 
     buildTypes {
@@ -33,6 +32,11 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -40,11 +44,6 @@ android {
 
     kotlinOptions {
         jvmTarget = '17'
-    }
-
-    buildFeatures {
-        buildConfig true
-        viewBinding true
     }
 }
 
@@ -69,7 +68,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
 
-    // Room database
+    // Room
     implementation "androidx.room:room-runtime:2.6.0"
     implementation "androidx.room:room-ktx:2.6.0"
     kapt "androidx.room:room-compiler:2.6.0"
@@ -80,8 +79,4 @@ dependencies {
     // ViewModel + LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
-
-    // Activity/Fragment KTX
-    implementation "androidx.activity:activity-ktx:1.8.0"
 }

@@ -1,105 +1,106 @@
 package com.megalife.translator.filter
 
-object ContentFilter {
+class ContentFilter {
 
-    // Medical and religious terms that should NEVER be blocked
-    private val medicalReligiousWhitelist = setOf(
-        // English medical
-        "breast", "breasts", "breast cancer", "testicular", "prostate", "cervical",
-        "vaginal", "rectal", "anal", "penile", "erectile", "uterine", "ovarian",
-        "circumcision", "fertility", "pregnancy", "childbirth", "midwife",
-        "gynecologist", "urologist", "mastectomy", "mammogram",
-        // Hebrew medical
-        "שד", "שדיים", "סרטן השד", "ערמונית", "צוואר הרחם", "רחם", "שחלות",
-        "מילה", "ברית מילה", "פוריות", "הריון", "לידה", "מיילדת",
-        // Religious terms
-        "niddah", "mikvah", "mikveh", "taharat hamishpacha", "tzniut", "modesty",
-        "נידה", "מקווה", "טהרת המשפחה", "צניעות",
-        "תהילים", "תורה", "תלמוד", "הלכה",
-        // Yiddish medical/religious
-        "מקוה", "נדה", "צניעות"
+    /**
+     * Medical and religious terms that must never be blocked regardless of context.
+     * These override any blocklist matches.
+     */
+    private val whitelistedTerms = setOf(
+        // Medical English
+        "breast cancer", "breast exam", "breast milk", "breastfeeding",
+        "testicular", "prostate", "cervical", "vaginal infection",
+        "sexual health", "sexually transmitted", "reproductive",
+        "circumcision", "fertility", "infertility", "menstruation",
+        "pregnancy", "prenatal", "gynecology", "obstetrics", "urology",
+        "anatomy", "puberty", "hormone", "estrogen", "testosterone",
+        // Medical Hebrew
+        "סרטן השד", "בדיקת שד", "הנקה", "פוריות", "עקרות",
+        "מחזור", "הריון", "גינקולוגיה", "אורולוגיה", "מילה",
+        // Religious English
+        "virgin mary", "immaculate conception", "holy seed",
+        "circumcision", "brit milah", "niddah", "mikveh", "mikvah",
+        "taharat hamishpacha", "family purity",
+        // Religious Hebrew
+        "ברית מילה", "נידה", "מקווה", "טהרת המשפחה",
+        "קדושה", "ערווה", "צניעות",
+        // Religious Yiddish
+        "ברית", "מקוה", "נידה", "טהרה"
     )
 
-    // Profanity blocklist - terms in all supported languages
-    private val profanityList = setOf(
+    /**
+     * Profanity blocklist covering English, Hebrew, Yiddish, Spanish, Russian.
+     * These are common profane words that should not be translated.
+     */
+    private val profanityBlocklist = setOf(
         // English
-        "fuck", "shit", "damn", "bitch", "asshole", "bastard", "crap",
-        "dick", "piss", "slut", "whore", "cock", "cunt",
-        "motherfucker", "bullshit", "goddamn",
-        // Hebrew
-        "זונה", "כוס", "זין", "חרא", "מניאק", "בן זונה", "שרמוטה",
+        "fuck", "shit", "damn", "bitch", "asshole", "bastard",
+        "crap", "dick", "piss", "cunt", "motherfucker", "bullshit",
+        "goddam", "goddamn",
         // Spanish
-        "mierda", "puta", "coño", "joder", "cabrón", "pendejo", "chingar",
-        "verga", "culo", "maricón",
-        // Russian
-        "блядь", "сука", "хуй", "пизда", "ебать", "мудак",
-        "дерьмо", "жопа",
+        "mierda", "puta", "joder", "coño", "cabrón", "pendejo",
+        "chingar", "verga", "culero", "maricón",
+        // Russian (transliterated and cyrillic)
+        "блядь", "сука", "хуй", "пизда", "ебать", "дерьмо",
+        "blyad", "suka", "khuy", "pizda", "yebat",
+        // Hebrew
+        "זונה", "חרא", "מניאק", "בן זונה",
         // Yiddish
-        "שמאק", "דרעק", "חזיר"
+        "חזיר", "שמאק", "דרעק"
     )
 
-    // Explicit sexual content blocklist
-    private val explicitContentList = setOf(
+    /**
+     * Explicit sexual content blocklist covering all supported languages.
+     */
+    private val explicitBlocklist = setOf(
         // English
-        "porn", "pornography", "xxx", "orgasm", "masturbat",
-        "erotic", "erotica", "nude", "nudity", "naked",
-        "sexual intercourse", "oral sex", "anal sex",
-        "strip club", "stripper", "escort service",
-        "hentai", "fetish", "bondage", "bdsm",
-        // Hebrew
-        "פורנו", "פורנוגרפיה", "סקס", "אורגזמה", "אוננות",
-        "ארוטי", "עירום", "יחסי מין",
+        "porn", "pornography", "xxx", "hentai", "nude", "nudes",
+        "naked", "sex video", "sex tape", "erotic", "orgasm",
+        "masturbat", "dildo", "vibrator", "blowjob", "handjob",
+        "threesome", "orgy", "fetish", "bondage", "stripper",
+        "escort service", "prostitut", "hooker", "brothel",
         // Spanish
-        "porno", "pornografía", "orgasmo", "masturbación",
-        "erótico", "desnudo", "relaciones sexuales",
+        "pornografía", "porno", "desnudo", "sexo oral",
+        "prostitución", "burdel",
         // Russian
-        "порно", "порнография", "оргазм", "мастурбация",
-        "эротика", "обнаженный",
+        "порно", "порнография", "проститу", "эротик",
+        "оргазм", "стриптиз", "бордель",
+        // Hebrew
+        "פורנו", "פורנוגרפיה", "זנות", "עירום",
         // Yiddish
-        "פארנא", "נאקעט"
+        "פּאָרנאָ"
     )
 
+    /**
+     * Check if text contains blocked content.
+     * Returns true if content should be blocked.
+     * Medical and religious terms are never blocked.
+     */
     fun isBlocked(text: String): Boolean {
         val lowerText = text.lowercase().trim()
 
-        // Check if the text is purely medical/religious — if so, never block
-        if (isWhitelisted(lowerText)) return false
-
-        // Check profanity
-        for (term in profanityList) {
+        // Check if text contains whitelisted medical/religious terms
+        // If it does, those terms cannot trigger blocking
+        for (term in whitelistedTerms) {
             if (lowerText.contains(term.lowercase())) {
-                // Verify it's not part of a whitelisted phrase
-                if (!isPartOfWhitelistedPhrase(lowerText, term.lowercase())) {
-                    return true
-                }
+                return false
             }
         }
 
-        // Check explicit content
-        for (term in explicitContentList) {
+        // Check profanity blocklist
+        for (term in profanityBlocklist) {
             if (lowerText.contains(term.lowercase())) {
-                if (!isPartOfWhitelistedPhrase(lowerText, term.lowercase())) {
-                    return true
-                }
-            }
-        }
-
-        return false
-    }
-
-    private fun isWhitelisted(text: String): Boolean {
-        return medicalReligiousWhitelist.any { whiteTerm ->
-            text.contains(whiteTerm.lowercase())
-        }
-    }
-
-    private fun isPartOfWhitelistedPhrase(fullText: String, blockedTerm: String): Boolean {
-        // Check if the blocked term appears only as part of a whitelisted phrase
-        for (whiteTerm in medicalReligiousWhitelist) {
-            if (whiteTerm.lowercase().contains(blockedTerm) && fullText.contains(whiteTerm.lowercase())) {
                 return true
             }
         }
+
+        // Check explicit content blocklist
+        for (term in explicitBlocklist) {
+            if (lowerText.contains(term.lowercase())) {
+                return true
+            }
+        }
+
         return false
     }
 }

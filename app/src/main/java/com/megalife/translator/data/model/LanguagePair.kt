@@ -1,46 +1,39 @@
 package com.megalife.translator.data.model
 
 data class LanguagePair(
-    val sourceLanguage: Language,
-    val targetLanguage: Language
+    val sourceName: String,
+    val sourceCode: String,
+    val targetName: String,
+    val targetCode: String
 ) {
     val displayName: String
-        get() = "${sourceLanguage.displayName} → ${targetLanguage.displayName}"
+        get() = "$sourceName → $targetName"
 
-    val reversedDisplayName: String
-        get() = "${targetLanguage.displayName} → ${sourceLanguage.displayName}"
-
-    fun reversed(): LanguagePair = LanguagePair(targetLanguage, sourceLanguage)
+    fun swapped(): LanguagePair = LanguagePair(
+        sourceName = targetName,
+        sourceCode = targetCode,
+        targetName = sourceName,
+        targetCode = sourceCode
+    )
 
     companion object {
         val ALL_PAIRS = listOf(
-            LanguagePair(Language.ENGLISH, Language.HEBREW),
-            LanguagePair(Language.ENGLISH, Language.YIDDISH),
-            LanguagePair(Language.ENGLISH, Language.SPANISH),
-            LanguagePair(Language.ENGLISH, Language.RUSSIAN),
-            LanguagePair(Language.HEBREW, Language.YIDDISH),
-            LanguagePair(Language.HEBREW, Language.RUSSIAN),
-            // Reversed pairs
-            LanguagePair(Language.HEBREW, Language.ENGLISH),
-            LanguagePair(Language.YIDDISH, Language.ENGLISH),
-            LanguagePair(Language.SPANISH, Language.ENGLISH),
-            LanguagePair(Language.RUSSIAN, Language.ENGLISH),
-            LanguagePair(Language.YIDDISH, Language.HEBREW),
-            LanguagePair(Language.RUSSIAN, Language.HEBREW)
+            LanguagePair("English", "en", "Hebrew", "he"),
+            LanguagePair("Hebrew", "he", "English", "en"),
+            LanguagePair("English", "en", "Yiddish", "yi"),
+            LanguagePair("Yiddish", "yi", "English", "en"),
+            LanguagePair("English", "en", "Spanish", "es"),
+            LanguagePair("Spanish", "es", "English", "en"),
+            LanguagePair("English", "en", "Russian", "ru"),
+            LanguagePair("Russian", "ru", "English", "en"),
+            LanguagePair("Hebrew", "he", "Yiddish", "yi"),
+            LanguagePair("Yiddish", "yi", "Hebrew", "he"),
+            LanguagePair("Hebrew", "he", "Russian", "ru"),
+            LanguagePair("Russian", "ru", "Hebrew", "he")
         )
 
-        val DEFAULT = ALL_PAIRS[0]
-    }
-}
+        val RTL_CODES = setOf("he", "yi", "ar")
 
-enum class Language(val code: String, val displayName: String, val isRtl: Boolean) {
-    ENGLISH("en", "English", false),
-    HEBREW("he", "Hebrew", true),
-    YIDDISH("yi", "Yiddish", true),
-    SPANISH("es", "Spanish", false),
-    RUSSIAN("ru", "Russian", false);
-
-    companion object {
-        fun fromCode(code: String): Language? = entries.find { it.code == code }
+        fun isRtl(langCode: String): Boolean = langCode in RTL_CODES
     }
 }

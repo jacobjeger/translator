@@ -4,14 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class TranslationResponse(
     @SerializedName("translations")
-    val translations: List<Translation>
+    val translations: List<TranslationItem>
 ) {
-    data class Translation(
+    data class TranslationItem(
         @SerializedName("text")
         val text: String,
         @SerializedName("to")
         val to: String
     )
-
-    fun translatedText(): String = translations.firstOrNull()?.text ?: ""
 }

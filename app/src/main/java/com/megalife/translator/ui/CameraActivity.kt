@@ -5,71 +5,65 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.TextView
 import android.widget.Toast
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.megalife.translator.R
 import java.io.File
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class CameraActivity : BaseActivity() {
 
-    companion object {
-        const val EXTRA_SOURCE_LANG = "source_lang"
-        const val EXTRA_TARGET_LANG = "target_lang"
-    }
-
     private lateinit var previewView: PreviewView
-    private lateinit var tvFlashToggle: TextView
+    private lateinit var tvFlashStatus: TextView
     private lateinit var tvInstruction: TextView
 
+    private var camera: Camera? = null
     private var imageCapture: ImageCapture? = null
     private var isFlashOn = false
     private var isCapturing = false
-    private var cameraProvider: ProcessCameraProvider? = null
+    private lateinit var cameraExecutor: ExecutorService
 
-    private var sourceLang: String? = null
-    private var targetLang: String? = null
+    private var sourceLang = "en"
+    private var targetLang = "he"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
-        sourceLang = intent.getStringExtra(EXTRA_SOURCE_LANG)
-        targetLang = intent.getStringExtra(EXTRA_TARGET_LANG)
+        sourceLang = intent.getStringExtra("source_lang") ?: "en"
+        targetLang = intent.getStringExtra("target_lang") ?: "he"
 
         previewView = findViewById(R.id.previewView)
-        tvFlashToggle = findViewById(R.id.tvFlashToggle)
+        tvFlashStatus = findViewById(R.id.tvFlashStatus)
         tvInstruction = findViewById(R.id.tvInstruction)
 
+        cameraExecutor = Executors.newSingleThreadExecutor()
         startCamera()
     }
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
         cameraProviderFuture.addListener({
-            cameraProvider = cameraProviderFuture.get()
+            val cameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.surfaceProvider = previewView.surfaceProvider
-                }
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(previewView.surfaceProvider)
+            }
 
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-                .setFlashMode(if (isFlashOn) ImageCapture.FLASH_MODE_ON else ImageCapture.FLASH_MODE_OFF)
                 .build()
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
-                cameraProvider?.unbindAll()
-                cameraProvider?.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+                cameraProvider.unbindAll()
+                camera = cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview, imageCapture
+                )
             } catch (e: Exception) {
                 Toast.makeText(this, "Camera failed to start", Toast.LENGTH_SHORT).show()
                 finish()
@@ -83,45 +77,61 @@ class CameraActivity : BaseActivity() {
 
         val imageCapture = imageCapture ?: return
 
-        val photoFile = File(cacheDir, "ocr_capture_${System.currentTimeMillis()}.jpg")
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
-        tvInstruction.text = "Capturing…"
-
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    isCapturing = false
-                    // Navigate to Image Translation screen
-                    val intent = Intent(this@CameraActivity, ImageTranslationActivity::class.java).apply {
-                        putExtra(ImageTranslationActivity.EXTRA_IMAGE_PATH, photoFile.absolutePath)
-                        putExtra(ImageTranslationActivity.EXTRA_SOURCE_LANG, sourceLang)
-                        putExtra(ImageTranslationActivity.EXTRA_TARGET_LANG, targetLang)
-                    }
-                    startActivityWithFade(intent)
-                    finish()
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    isCapturing = false
-                    tvInstruction.text = getString(R.string.camera_instruction)
-                    Toast.makeText(this@CameraActivity, "Capture failed", Toast.LENGTH_SHORT).show()
-                }
-            }
+        // Trigger autofocus first
+        val factory = previewView.meteringPointFactory
+        val point = factory.createPoint(
+            previewView.width / 2f,
+            previewView.height / 2f
         )
+        val action = FocusMeteringAction.Builder(point)
+            .setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
+
+        camera?.cameraControl?.startFocusAndMetering(action)?.addListener({
+            // After focus, take the picture
+            val photoFile = File(cacheDir, "ocr_capture_${System.currentTimeMillis()}.jpg")
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+            imageCapture.takePicture(
+                outputOptions,
+                ContextCompat.getMainExecutor(this),
+                object : ImageCapture.OnImageSavedCallback {
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                        isCapturing = false
+                        val intent = Intent(this@CameraActivity, ImageTranslationActivity::class.java)
+                        intent.putExtra("image_path", photoFile.absolutePath)
+                        intent.putExtra("source_lang", sourceLang)
+                        intent.putExtra("target_lang", targetLang)
+                        startActivityWithFade(intent)
+                        finish()
+                    }
+
+                    override fun onError(exception: ImageCaptureException) {
+                        isCapturing = false
+                        Toast.makeText(
+                            this@CameraActivity,
+                            "Capture failed: ${exception.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            )
+        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun toggleFlash() {
         isFlashOn = !isFlashOn
-        tvFlashToggle.text = if (isFlashOn) getString(R.string.camera_flash_on) else getString(R.string.camera_flash_off)
-        imageCapture?.flashMode = if (isFlashOn) ImageCapture.FLASH_MODE_ON else ImageCapture.FLASH_MODE_OFF
+        camera?.cameraControl?.enableTorch(isFlashOn)
+        tvFlashStatus.text = if (isFlashOn) {
+            getString(R.string.camera_flash_on)
+        } else {
+            getString(R.string.camera_flash_off)
+        }
     }
 
     override fun handleDpadEvent(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_CENTER -> {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                 capturePhoto()
                 return true
             }
@@ -139,6 +149,6 @@ class CameraActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraProvider?.unbindAll()
+        cameraExecutor.shutdown()
     }
 }

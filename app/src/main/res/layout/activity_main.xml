@@ -4,41 +4,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background"
-    android:padding="@dimen/spacing_md"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="@color/colorBackground"
+    android:padding="@dimen/padding_medium">
 
     <!-- Language Pair Selector -->
     <TextView
         android:id="@+id/tvLanguagePair"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.MegaLife.LanguageSelector"
+        android:background="@drawable/bg_language_selector"
+        android:gravity="center"
+        android:padding="@dimen/padding_small"
+        android:textColor="@color/colorLanguagePair"
+        android:textSize="@dimen/text_size_medium"
         android:text="English → Hebrew"
         android:focusable="true"
         android:focusableInTouchMode="true" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/spacing_sm" />
+        android:layout_height="8dp" />
 
-    <!-- Source Text Input -->
+    <!-- Source Input -->
     <EditText
         android:id="@+id/etSourceText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        style="@style/Widget.MegaLife.InputField"
+        android:background="@drawable/bg_input_field"
+        android:gravity="top|start"
         android:hint="@string/hint_source_text"
         android:inputType="textMultiLine"
-        android:maxLines="6"
+        android:padding="@dimen/padding_medium"
+        android:textColor="@color/colorOnSurface"
+        android:textColorHint="#80E0E0E0"
+        android:textSize="@dimen/text_size_medium"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:importantForAutofill="no" />
+        android:focusableInTouchMode="true" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/spacing_sm" />
+        android:layout_height="8dp" />
 
     <!-- Translation Output -->
     <TextView
@@ -46,25 +53,28 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        style="@style/Widget.MegaLife.InputField"
+        android:background="@drawable/bg_input_field"
+        android:gravity="top|start"
         android:hint="@string/hint_translation_output"
+        android:padding="@dimen/padding_medium"
+        android:textColor="@color/colorOnSurface"
+        android:textColorHint="#80E0E0E0"
+        android:textSize="@dimen/text_size_medium"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:textIsSelectable="false" />
+        android:focusableInTouchMode="true" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/spacing_sm" />
+        android:layout_height="8dp" />
 
-    <!-- Translating indicator -->
+    <!-- Status text -->
     <TextView
-        android:id="@+id/tvTranslating"
+        android:id="@+id/tvStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/translating"
-        android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_size_small"
         android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_size_small"
         android:visibility="gone" />
 
     <!-- Action Buttons Row -->
@@ -73,41 +83,69 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingTop="@dimen/padding_small">
 
-        <Button
+        <TextView
             android:id="@+id/btnCamera"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="@dimen/spacing_xs"
-            style="@style/Widget.MegaLife.Button"
+            android:background="@drawable/bg_focusable"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
             android:text="@string/btn_camera"
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginEnd="4dp"
             android:focusable="true"
             android:focusableInTouchMode="true" />
 
-        <Button
+        <TextView
             android:id="@+id/btnGallery"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/spacing_xs"
-            android:layout_marginEnd="@dimen/spacing_xs"
-            style="@style/Widget.MegaLife.Button"
+            android:background="@drawable/bg_focusable"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
             android:text="@string/btn_gallery"
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             android:focusable="true"
             android:focusableInTouchMode="true" />
 
-        <Button
+        <TextView
             android:id="@+id/btnHistory"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/spacing_xs"
-            style="@style/Widget.MegaLife.Button"
+            android:background="@drawable/bg_focusable"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
             android:text="@string/btn_history"
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <TextView
+            android:id="@+id/btnSettings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_focusable"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
+            android:text="@string/btn_settings"
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginStart="4dp"
             android:focusable="true"
             android:focusableInTouchMode="true" />
     </LinearLayout>
-
 </LinearLayout>

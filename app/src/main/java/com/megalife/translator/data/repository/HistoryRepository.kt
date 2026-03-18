@@ -1,32 +1,28 @@
 package com.megalife.translator.data.repository
 
+import android.content.Context
 import com.megalife.translator.data.local.AppDatabase
 import com.megalife.translator.data.model.TranslationHistory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class HistoryRepository(private val database: AppDatabase) {
+class HistoryRepository(context: Context) {
 
-    private val dao = database.translationHistoryDao()
-    private val maxItems = 20
+    private val dao = AppDatabase.getInstance(context).translationHistoryDao()
 
-    suspend fun getAll(): List<TranslationHistory> = withContext(Dispatchers.IO) {
-        dao.getAll()
-    }
+    suspend fun getAll(): List<TranslationHistory> = dao.getAll()
 
-    suspend fun insert(history: TranslationHistory) = withContext(Dispatchers.IO) {
-        // Enforce max 20 items — drop oldest if at limit
-        if (dao.getCount() >= maxItems) {
-            dao.deleteOldest()
+    suspend fun insert(history: TranslationHistory) {
+        val count = dao.getCount()
+        if (count >= MAX_HISTORY) {
+            dao.deleteOldest(count - MAX_HISTORY + 1)
         }
         dao.insert(history)
     }
 
-    suspend fun delete(history: TranslationHistory) = withContext(Dispatchers.IO) {
-        dao.delete(history)
-    }
+    suspend fun delete(history: TranslationHistory) = dao.delete(history)
 
-    suspend fun deleteAll() = withContext(Dispatchers.IO) {
-        dao.deleteAll()
+    suspend fun deleteAll() = dao.deleteAll()
+
+    companion object {
+        private const val MAX_HISTORY = 20
     }
 }

@@ -9,8 +9,8 @@ data class TranslationHistory(
     val id: Long = 0,
     val sourceText: String,
     val translatedText: String,
-    val sourceLanguageCode: String,
-    val targetLanguageCode: String,
+    val sourceLanguage: String,
+    val targetLanguage: String,
     val languagePairDisplay: String,
     val timestamp: Long = System.currentTimeMillis()
 )
