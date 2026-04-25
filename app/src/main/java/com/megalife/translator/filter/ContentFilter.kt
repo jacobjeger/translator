@@ -38,8 +38,11 @@ class ContentFilter {
         "crap", "dick", "piss", "cunt", "motherfucker", "bullshit",
         "goddam", "goddamn",
         // Spanish
-        "mierda", "puta", "joder", "coño", "cabrón", "pendejo",
-        "chingar", "verga", "culero", "maricón",
+        "mierda", "puta", "puto", "joder", "jodido", "coño", "cabrón",
+        "pendejo", "chingar", "chingada", "pinche", "verga", "culero",
+        "maricón", "carajo", "cojones", "gilipollas", "hijo de puta",
+        "hijoputa", "huevón", "güevón", "boludo", "pelotudo", "mamón",
+        "mierdoso", "cagar", "culiao", "culiado",
         // Russian (transliterated and cyrillic)
         "блядь", "сука", "хуй", "пизда", "ебать", "дерьмо",
         "blyad", "suka", "khuy", "pizda", "yebat",
@@ -79,22 +82,18 @@ class ContentFilter {
     fun isBlocked(text: String): Boolean {
         val lowerText = text.lowercase().trim()
 
-        // Check if text contains whitelisted medical/religious terms
-        // If it does, those terms cannot trigger blocking
         for (term in whitelistedTerms) {
             if (lowerText.contains(term.lowercase())) {
                 return false
             }
         }
 
-        // Check profanity blocklist
         for (term in profanityBlocklist) {
             if (lowerText.contains(term.lowercase())) {
                 return true
             }
         }
 
-        // Check explicit content blocklist
         for (term in explicitBlocklist) {
             if (lowerText.contains(term.lowercase())) {
                 return true

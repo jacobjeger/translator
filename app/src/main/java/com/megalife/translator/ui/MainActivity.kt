@@ -199,7 +199,10 @@ class MainActivity : BaseActivity() {
             if (blocked) {
                 etSourceText.text?.clear()
                 tvTranslationOutput.text = ""
-                Toast.makeText(this, R.string.content_blocked, Toast.LENGTH_LONG).show()
+                val msg = getString(R.string.content_blocked)
+                tvStatus.text = msg
+                tvStatus.visibility = View.VISIBLE
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
                 focusIndex = 1
                 updateFocus()
             }

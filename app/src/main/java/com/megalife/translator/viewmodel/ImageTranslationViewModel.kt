@@ -77,7 +77,7 @@ class ImageTranslationViewModel(application: Application) : AndroidViewModel(app
                     is TranslationRepository.TranslationResult.ContentBlocked -> {
                         _resultBitmap.value = bitmap
                         _allTranslatedText.value = texts.joinToString("\n")
-                        _errorMessage.value = "This content cannot be translated"
+                        _errorMessage.value = "Can't translate explicit content"
                     }
                     is TranslationRepository.TranslationResult.Error -> {
                         // Show original text with error

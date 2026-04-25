@@ -23,7 +23,7 @@
     <string name="image_saved">Image saved to gallery</string>
     <string name="no_text_found">No text found — try again</string>
     <string name="translation_error">Translation failed — showing original text</string>
-    <string name="content_blocked">This content cannot be translated</string>
+    <string name="content_blocked">Can\'t translate explicit content</string>
     <string name="empty_history">No translation history</string>
     <string name="translating">Translating…</string>
     <string name="processing_image">Processing image…</string>
