@@ -46,4 +46,30 @@
         android:text="@string/camera_instruction"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_small" />
+
+    <!-- Capturing indicator -->
+    <LinearLayout
+        android:id="@+id/capturingOverlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#B0000000"
+        android:padding="@dimen/padding_large"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminate="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="@string/camera_capturing"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_small" />
+    </LinearLayout>
 </FrameLayout>

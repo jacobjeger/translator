@@ -3,6 +3,8 @@ package com.megalife.translator.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.*
@@ -19,6 +21,7 @@ class CameraActivity : BaseActivity() {
     private lateinit var previewView: PreviewView
     private lateinit var tvFlashStatus: TextView
     private lateinit var tvInstruction: TextView
+    private lateinit var capturingOverlay: LinearLayout
 
     private var camera: Camera? = null
     private var imageCapture: ImageCapture? = null
@@ -39,6 +42,7 @@ class CameraActivity : BaseActivity() {
         previewView = findViewById(R.id.previewView)
         tvFlashStatus = findViewById(R.id.tvFlashStatus)
         tvInstruction = findViewById(R.id.tvInstruction)
+        capturingOverlay = findViewById(R.id.capturingOverlay)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
         startCamera()
@@ -74,8 +78,13 @@ class CameraActivity : BaseActivity() {
     private fun capturePhoto() {
         if (isCapturing) return
         isCapturing = true
+        capturingOverlay.visibility = View.VISIBLE
 
-        val imageCapture = imageCapture ?: return
+        val imageCapture = imageCapture ?: run {
+            capturingOverlay.visibility = View.GONE
+            isCapturing = false
+            return
+        }
 
         // Trigger autofocus first
         val factory = previewView.meteringPointFactory
@@ -108,6 +117,7 @@ class CameraActivity : BaseActivity() {
 
                     override fun onError(exception: ImageCaptureException) {
                         isCapturing = false
+                        capturingOverlay.visibility = View.GONE
                         Toast.makeText(
                             this@CameraActivity,
                             "Capture failed: ${exception.message}",

@@ -18,6 +18,7 @@
     <string name="camera_instruction">Point at text and press center</string>
     <string name="camera_flash_on">Flash On</string>
     <string name="camera_flash_off">Flash Off</string>
+    <string name="camera_capturing">Capturing…</string>
 
     <string name="copied_to_clipboard">Copied</string>
     <string name="image_saved">Image saved to gallery</string>
