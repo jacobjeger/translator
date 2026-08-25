@@ -32,4 +32,11 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
             loadHistory()
         }
     }
+
+    /** Drops cached translations without touching the visible history list. */
+    fun clearCache() {
+        viewModelScope.launch {
+            repository.clearCache()
+        }
+    }
 }

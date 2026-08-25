@@ -163,6 +163,8 @@ class SettingsActivity : BaseActivity() {
             }
             5 -> { // Toggle history
                 prefs.historyEnabled = !prefs.historyEnabled
+                // Turning history off also drops cached source text.
+                if (!prefs.historyEnabled) historyViewModel.clearCache()
                 refreshDisplay()
             }
             6 -> { // Clear history

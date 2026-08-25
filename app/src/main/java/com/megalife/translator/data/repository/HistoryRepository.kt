@@ -6,7 +6,9 @@ import com.megalife.translator.data.model.TranslationHistory
 
 class HistoryRepository(context: Context) {
 
-    private val dao = AppDatabase.getInstance(context).translationHistoryDao()
+    private val db = AppDatabase.getInstance(context)
+    private val dao = db.translationHistoryDao()
+    private val cacheDao = db.translationCacheDao()
 
     suspend fun getAll(): List<TranslationHistory> = dao.getAll()
 
@@ -20,7 +22,13 @@ class HistoryRepository(context: Context) {
 
     suspend fun delete(history: TranslationHistory) = dao.delete(history)
 
-    suspend fun deleteAll() = dao.deleteAll()
+    /** Clears history and the translation cache — both hold the user's source text. */
+    suspend fun deleteAll() {
+        dao.deleteAll()
+        cacheDao.deleteAll()
+    }
+
+    suspend fun clearCache() = cacheDao.deleteAll()
 
     companion object {
         private const val MAX_HISTORY = 20

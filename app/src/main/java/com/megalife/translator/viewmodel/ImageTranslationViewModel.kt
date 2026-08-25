@@ -14,7 +14,7 @@ import java.io.File
 
 class ImageTranslationViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val translationRepo = TranslationRepository()
+    private val translationRepo = TranslationRepository(application)
     private val ocrProcessor = OcrProcessor()
     private val overlayRenderer = ImageOverlayRenderer()
 

@@ -11,7 +11,7 @@ import kotlinx.coroutines.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val translationRepo = TranslationRepository()
+    private val translationRepo = TranslationRepository(application)
     private val historyRepo = HistoryRepository(application)
     val prefs = PreferencesManager(application)
 
