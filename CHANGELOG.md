@@ -30,6 +30,12 @@ Nothing has been released or tagged yet — all work to date sits under
 - Blocked-content message is clearer, and the Spanish profanity list is
   broader.
 
+### Fixed
+
+- Launcher icon no longer fails resource linking. The adaptive icon moved to
+  `mipmap-anydpi-v26`, and API 24-25 — which cannot render `<adaptive-icon>` —
+  now gets a legacy fallback drawable.
+
 ### Known issues
 
 - **Yiddish pairs do not work.** Azure Translator has no Yiddish support, so
@@ -37,8 +43,5 @@ Nothing has been released or tagged yet — all work to date sits under
 - **Hebrew OCR does not build.** `com.google.mlkit:text-recognition-hebrew`
   is not a real artifact — ML Kit ships Latin, Chinese, Devanagari, Japanese
   and Korean script recognisers only, with no Hebrew script model.
-- **Launcher icons fail resource linking.** The `<adaptive-icon>` XMLs sit in
-  `mipmap-*dpi` while `minSdk` is 24; they need to move to
-  `mipmap-anydpi-v26`.
 - No Gradle wrapper is checked in, and the toolchain needs Gradle 8.x
   (AGP 8.1.0 does not load under Gradle 9).

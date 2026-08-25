@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  API 24-25 fallback. <adaptive-icon> requires API 26, so those platforms get
+  the legacy drawable and API 26+ picks up mipmap-anydpi-v26 instead.
+-->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_launcher_legacy" />
